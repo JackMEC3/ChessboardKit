@@ -519,38 +519,48 @@ public struct Chessboard: View {
             ForEach(0..<64, id: \.self) { index in
                 let row = index / 8
                 let column = index % 8
-                let piece = chessboardModel.game.position.board[index]
-                
+                // board is column-major
+                let boardIndex = row + column * 8
+                let piece = chessboardModel.game.position.board[boardIndex]
+
                 ChessSquareView(piece: piece,
                                 row: row,
                                 column: column)
-                .position(x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - column : column),
-                          y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - row: row))
+                .position(
+                    x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - column : column),
+                    y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - row : row)
+                )
             }
         }
     }
+
     
     var piecesView: some View {
         ZStack {
             ForEach(0..<64, id: \.self) { index in
                 let row = index / 8
                 let column = index % 8
-                let piece = chessboardModel.game.position.board[index]
-                
-                let isMoving = chessboardModel.movingPiece?.from == BoardSquare(row: row, column: column) ||
-                               chessboardModel.movingPiece?.to == BoardSquare(row: row, column: column)
-                
+                // board is column-major
+                let boardIndex = row + column * 8
+                let piece = chessboardModel.game.position.board[boardIndex]
+
+                let isMoving =
+                    chessboardModel.movingPiece?.from == BoardSquare(row: row, column: column) ||
+                    chessboardModel.movingPiece?.to == BoardSquare(row: row, column: column)
+
                 ChessPieceView(animation: animation,
                                piece: piece,
                                square: BoardSquare(row: row, column: column))
                 .opacity(isMoving ? 0.0 : 1.0)
                 .animation(nil, value: isMoving)
-                .position(x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - column : column),
-                          y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - row: row))
+                .position(
+                    x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - column : column),
+                    y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - row : row)
+                )
             }
         }
     }
-    
+
     var legalMoveHighlightsView: some View {
         ZStack {
             ForEach(Array(chessboardModel.legalMoveSquares), id: \.id) { square in
@@ -597,7 +607,8 @@ private struct ChessSquareView: View {
     }
     
     var y: CGFloat {
-        chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - row: row)
+        chessboardModel.size / 16 +
+        chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - row : row)
     }
     
     var body: some View {
@@ -660,8 +671,10 @@ private struct ChessPieceView: View {
     }
     
     var y: CGFloat {
-        chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - square.row:  square.row)
+        chessboardModel.size / 16 +
+        chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - square.row : square.row)
     }
+
     
     var isMoving: Bool {
         piece == chessboardModel.movingPiece?.piece && square == chessboardModel.movingPiece?.from
