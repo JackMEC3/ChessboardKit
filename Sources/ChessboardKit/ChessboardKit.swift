@@ -597,7 +597,7 @@ private struct ChessSquareView: View {
     }
     
     var y: CGFloat {
-        chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? row : 7 - row)
+        chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - row: row)
     }
     
     var body: some View {
@@ -660,7 +660,7 @@ private struct ChessPieceView: View {
     }
     
     var y: CGFloat {
-        chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? square.row : 7 - square.row)
+        chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - square.row:  square.row)
     }
     
     var isMoving: Bool {
