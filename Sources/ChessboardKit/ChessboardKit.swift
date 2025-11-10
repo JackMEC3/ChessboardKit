@@ -517,8 +517,8 @@ public struct Chessboard: View {
     var squaresView: some View {
         ZStack {
             ForEach(0..<64, id: \.self) { index in
-                let row = index % 8
-                let column = index / 8
+                let row = index / 8
+                let column = index % 8
                 let piece = chessboardModel.game.position.board[index]
                 
                 ChessSquareView(piece: piece,
@@ -533,8 +533,8 @@ public struct Chessboard: View {
     var piecesView: some View {
         ZStack {
             ForEach(0..<64, id: \.self) { index in
-                let row = index % 8
-                let column = index / 8
+                let row = index / 8
+                let column = index % 8
                 let piece = chessboardModel.game.position.board[index]
                 
                 let isMoving = chessboardModel.movingPiece?.from == BoardSquare(row: row, column: column) ||
