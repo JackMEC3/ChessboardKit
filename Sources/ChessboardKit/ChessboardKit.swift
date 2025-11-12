@@ -500,7 +500,7 @@ public struct Chessboard: View {
     }
     
     func columnLabelView(column: Int) -> some View {
-        let displayColumn = chessboardModel.shouldFlipBoard ? 7 - column : column
+        let displayColumn = chessboardModel.shouldFlipBoard ? column : ( 7 - column)
         let labelSize = chessboardModel.size / 32
         let squareSize = chessboardModel.size / 8
         
