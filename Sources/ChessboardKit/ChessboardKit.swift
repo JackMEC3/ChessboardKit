@@ -563,7 +563,7 @@ public struct Chessboard: View {
                     .fill(chessboardModel.colorScheme.legalMove)
                     .frame(width: chessboardModel.size / 24, height: chessboardModel.size / 24)
                     .position(x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - square.column : square.column),
-                              y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? square.row : 7 - square.row))
+                              y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - square.row : square.row))
             }
         }
     }
