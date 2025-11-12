@@ -75,7 +75,7 @@ public class ChessboardModel {
     public var promotionTargetSquare: String?
     public var promotionLan: String?
     
-    public var shouldFlipBoard: Bool { perspective == .black }
+    public var shouldFlipBoard: Bool { perspective == .white }
     
     public var movingPiece: (piece: Piece, from: BoardSquare, to: BoardSquare)?
     
