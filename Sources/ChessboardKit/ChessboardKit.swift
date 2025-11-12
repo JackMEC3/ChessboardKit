@@ -130,7 +130,7 @@ public class ChessboardModel {
         
         legalMoveSquares.removeAll()
         
-        let index = square.row + square.column * 8
+        let index = square.row * 8 + square.column
         guard game.position.board[index] != nil else { return }
         
         for move in game.legalMoves {
@@ -519,7 +519,6 @@ public struct Chessboard: View {
             ForEach(0..<64, id: \.self) { index in
                 let row = index / 8
                 let column = index % 8
-                // board is column-major
                 let boardIndex = row + column * 8
                 let piece = chessboardModel.game.position.board[boardIndex]
 
