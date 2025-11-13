@@ -130,7 +130,7 @@ public class ChessboardModel {
         
         legalMoveSquares.removeAll()
         
-        let index = square.row * 8 + square.column
+        let index = (square.row - 1) * 8 + square.column
         guard game.position.board[index] != nil else { return }
         
         for move in game.legalMoves {
