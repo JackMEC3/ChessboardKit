@@ -480,8 +480,8 @@ public struct Chessboard: View {
     var backgroundView: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 8), spacing: 0) {
             ForEach(0..<64) { index in
-                let row = index / 8
-                let column = index % 8
+                let row = index % 8
+                let column = index / 8
                 let isLightSquare = (row + column) % 2 == 0
                 
                 Rectangle()
@@ -536,8 +536,8 @@ public struct Chessboard: View {
     var squaresView: some View {
         ZStack {
             ForEach(0..<64, id: \.self) { index in
-                let row = index / 8
-                let column = index % 8
+                let row = index % 8
+                let column = index / 8
                 let boardIndex = row * 8 + column
                 let piece = chessboardModel.game.position.board[boardIndex]
 
@@ -556,8 +556,8 @@ public struct Chessboard: View {
     var piecesView: some View {
         ZStack {
             ForEach(0..<64, id: \.self) { index in
-                let row = index / 8
-                let column = index % 8
+                let row = index % 8
+                let column = index / 8
                 let boardIndex = row * 8 + column
                 let piece = chessboardModel.game.position.board[boardIndex]
 
