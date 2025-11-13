@@ -107,8 +107,8 @@ public class ChessboardModel {
             if let square = squareAndPiece?.0,
                let piece = squareAndPiece?.1
             {
-                let from = BoardSquare(row: square.rank, column: square.file)
-                let to = BoardSquare(row: currentMove!.to.rank, column: currentMove!.to.file)
+                let from = BoardSquare(row: square.rank - 1, column: square.file - 1)
+                let to = BoardSquare(row: currentMove!.to.rank - 1, column: currentMove!.to.file - 1)
                 
                 movingPiece = (piece: piece, from: from, to: to)
             }
@@ -116,6 +116,23 @@ public class ChessboardModel {
         
         self.fen = fen
     }
+    public func algebraic(from square: BoardSquare) -> String {
+        let fileChar = Character(UnicodeScalar(square.column + 97)!)
+        let rankChar = String(square.row + 1)
+        return "\(fileChar)\(rankChar)"
+    }
+
+    public func boardSquare(from algebraic: String) -> BoardSquare? {
+        guard algebraic.count == 2 else { return nil }
+        let fileChar = algebraic.first!
+        let rankChar = algebraic.last!
+        guard let file = "abcdefgh".firstIndex(of: fileChar)?.utf16Offset(in: "abcdefgh"),
+              let rank = Int(String(rankChar)),
+              (1...8).contains(rank)
+        else { return nil }
+        return BoardSquare(row: rank - 1, column: file)
+    }
+
     
     public func deselect() {
         selectedSquare = nil
@@ -130,12 +147,14 @@ public class ChessboardModel {
         
         legalMoveSquares.removeAll()
         
-        let index = (square.row - 1) * 8 + square.column
+        let index = square.row * 8 + square.column
         guard game.position.board[index] != nil else { return }
         
         for move in game.legalMoves {
-            if move.from.rank == square.row && move.from.file == square.column {
-                let targetSquare = BoardSquare(row: move.to.rank, column: move.to.file)
+            let fromRow = move.from.rank - 1
+            let fromCol = move.from.file - 1
+            if fromRow == square.row && fromCol == square.column {
+                let targetSquare = BoardSquare(row: move.to.rank - 1, column: move.to.file - 1)
                 legalMoveSquares.insert(targetSquare)
             }
         }
@@ -519,7 +538,7 @@ public struct Chessboard: View {
             ForEach(0..<64, id: \.self) { index in
                 let row = index / 8
                 let column = index % 8
-                let boardIndex = row + column * 8
+                let boardIndex = row * 8 + column
                 let piece = chessboardModel.game.position.board[boardIndex]
 
                 ChessSquareView(piece: piece,
@@ -539,7 +558,7 @@ public struct Chessboard: View {
             ForEach(0..<64, id: \.self) { index in
                 let row = index / 8
                 let column = index % 8
-                let boardIndex = row + column * 8
+                let boardIndex = row * 8 + column
                 let piece = chessboardModel.game.position.board[boardIndex]
 
                 let isMoving = chessboardModel.movingPiece?.from == BoardSquare(row: row, column: column) ||
@@ -731,8 +750,8 @@ private struct ChessPieceView: View {
             let sourceRow = selectedSquare.row
             let sourceColumn = selectedSquare.column
             
-            let sourceSquare = "\(Character(UnicodeScalar(sourceColumn + 97)!))\(sourceRow + 1)"
-            let targetSquare = "\(Character(UnicodeScalar(square.column + 97)!))\(square.row + 1)"
+            let sourceSquare = chessboardModel.algebraic(from: BoardSquare(row: sourceRow, column: sourceColumn))
+            let targetSquare = chessboardModel.algebraic(from: BoardSquare(row: square.row, column: square.column))
             
             let lan = "\(sourceSquare)\(targetSquare)"
             let move = Move(string: lan)
@@ -741,7 +760,7 @@ private struct ChessPieceView: View {
             chessboardModel.deselect()
             chessboardModel.clearLegalMoveHighlights()
             
-            guard let selectedPiece = chessboardModel.game.position.board[selectedSquare.row + selectedSquare.column * 8]
+            guard let selectedPiece = chessboardModel.game.position.board[selectedSquare.row * 8 + selectedSquare.column]
             else { return }
             
             let isPromotable = chessboardModel.isPromotable(piece: selectedPiece, lan: lan)
@@ -822,8 +841,8 @@ private struct ChessPieceView: View {
                 let targetColumn = chessboardModel.shouldFlipBoard ? square.column - columnOffset : square.column + columnOffset
                 let targetRow = chessboardModel.shouldFlipBoard ? square.row + rowOffset : square.row - rowOffset
                 
-                let sourceSquare = "\(Character(UnicodeScalar(square.column + 97)!))\(square.row + 1)"
-                let targetSquare = "\(Character(UnicodeScalar(targetColumn + 97)!))\(targetRow + 1)"
+                let sourceSquare = chessboardModel.algebraic(from: square)
+                let targetSquare = chessboardModel.algebraic(from: BoardSquare(row: targetRow, column: targetColumn))
                 
                 let lan = "\(sourceSquare)\(targetSquare)"
                 let move = Move(string: lan)
@@ -833,7 +852,7 @@ private struct ChessPieceView: View {
                     offset = .zero
                 }
                 
-                guard let selectedPiece = chessboardModel.game.position.board[square.row + square.column * 8]
+                guard let selectedPiece = chessboardModel.game.position.board[square.row * 8 + square.column]
                 else { return }
                 
                 let isPromotable = chessboardModel.isPromotable(piece: selectedPiece, lan: lan)
