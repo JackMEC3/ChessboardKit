@@ -339,11 +339,11 @@ private struct MovingPieceView: View {
                 .position(position)
                 .onAppear {
                     position = CGPoint(x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - movingPiece.from.column : movingPiece.from.column),
-                                       y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ?  7 - movingPiece.from.row: movingPiece.from.row))
+                                       y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ?  movingPiece.from.row: 7 - movingPiece.from.row))
                     
                     withAnimation(.easeInOut(duration: 0.5)) {
                         position = CGPoint(x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - movingPiece.to.column : movingPiece.to.column),
-                                           y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ?  7 - movingPiece.to.row : movingPiece.to.row))
+                                           y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ?  movingPiece.to.row : 7 - movingPiece.to.row))
                     } completion: {
                         chessboardModel.movingPiece = nil
                     }
@@ -480,7 +480,7 @@ public struct Chessboard: View {
     var backgroundView: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 8), spacing: 0) {
             ForEach(0..<64) { index in
-                let row = 7 - index / 8
+                let row = index / 8
                 let column = index % 8
                 let isLightSquare = (row + column) % 2 == 0
                 
@@ -536,7 +536,7 @@ public struct Chessboard: View {
     var squaresView: some View {
         ZStack {
             ForEach(0..<64, id: \.self) { index in
-                let row = 7 - index / 8
+                let row = index / 8
                 let column = index % 8
                 let boardIndex = (7 - row) * 8 + column
                 let piece = chessboardModel.game.position.board[boardIndex]
@@ -546,7 +546,7 @@ public struct Chessboard: View {
                                 column: column)
                 .position(
                     x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - column : column),
-                    y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - row : row)
+                    y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? row : 7 - row)
                 )
             }
         }
@@ -556,7 +556,7 @@ public struct Chessboard: View {
     var piecesView: some View {
         ZStack {
             ForEach(0..<64, id: \.self) { index in
-                let row = 7 - index / 8
+                let row = index / 8
                 let column = index % 8
                 let boardIndex = (7 - row) * 8 + column
                 let piece = chessboardModel.game.position.board[boardIndex]
@@ -570,7 +570,7 @@ public struct Chessboard: View {
                 .opacity(isMoving ? 0.0 : 1.0)
                 .animation(nil, value: isMoving)
                 .position(x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - column : column),
-                          y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - row : row))
+                          y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? row : 7 - row))
             }
         }
     }
@@ -581,7 +581,7 @@ public struct Chessboard: View {
                     .fill(chessboardModel.colorScheme.legalMove)
                     .frame(width: chessboardModel.size / 24, height: chessboardModel.size / 24)
                     .position(x: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - square.column : square.column),
-                              y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? 7 - square.row : square.row))
+                              y: chessboardModel.size / 16 + chessboardModel.size / 8 * CGFloat(chessboardModel.shouldFlipBoard ? square.row : 7 - square.row))
             }
         }
     }
