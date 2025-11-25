@@ -10,7 +10,7 @@ let package = Package(
             name: "ChessboardKit",
             targets: ["ChessboardKit"]),
     ],
-    dependencies: [.package(url: "https://github.com/aperechnev/ChessKit", from: "1.3.7")],
+    dependencies: [.package(url: "https://github.com/JackMEC3/ChessKit.git", from: "1.3.7")],
     targets: [
         .target(name: "ChessboardKit",
                 dependencies: ["ChessKit"],
